@@ -3,7 +3,7 @@ package com.streamlined.dataprocessor.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Person {
+public class Person implements Entity<String> {
 
 	public enum Sex {
 		FEMALE, MALE
@@ -140,6 +140,11 @@ public class Person {
 		return "%s (birthday %tF, sex %s, eye color %s, hair color %s, weight %.2f, height %.2f, country of origin [%s], citizenship [%s])"
 				.formatted(name, birthday, sex.toString(), eyeColor.toString(), hairColor.toString(), weight, height,
 						countryOfOrigin.toString(), citizenship.toString());
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return String.join(":", name, Objects.toString(birthday));
 	}
 
 }

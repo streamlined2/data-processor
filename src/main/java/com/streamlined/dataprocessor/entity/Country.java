@@ -2,7 +2,7 @@ package com.streamlined.dataprocessor.entity;
 
 import java.util.Objects;
 
-public class Country {
+public class Country implements Entity<String> {
 
 	public enum Continent {
 		AFRICA, ASIA, EUROPE, NORTH_AMERICA, SOUTH_AMERICA, ANTARCTICA, AUSTRALIA
@@ -84,8 +84,13 @@ public class Country {
 
 	@Override
 	public String toString() {
-		return "%s (%s): capital %s, population %d, square %.2f".formatted(name, continent.toString(),
-				capital, population, square);
+		return "%s (%s): capital %s, population %d, square %.2f".formatted(name, continent.toString(), capital,
+				population, square);
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return getName();
 	}
 
 }
