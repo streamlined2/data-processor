@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -28,23 +28,24 @@ public class Parser<T extends Entity<?>> {
 		mapper.registerModule(new JavaTimeModule());
 	}
 
-	public List<T> loadData(Path dataPath) {
+	public Stream<T> loadData(Path dataPath) {
 		try (var pathStream = Files.newDirectoryStream(dataPath, FILE_PATTERN)) {
-			List<T> list = new LinkedList<>();
+			Stream<T> stream = Stream.empty();
 			for (var sourceFilePath : pathStream) {
-				list.addAll(loadDataFromFile(sourceFilePath));
+				stream = Stream.concat(stream, loadDataFromFile(sourceFilePath));
 			}
-			return list;
+			return stream;
 		} catch (IOException e) {
 			throw new ParseException("Error iterating through directory %s".formatted(dataPath), e);
 		}
 	}
 
-	private List<T> loadDataFromFile(Path filePath) {
+	private Stream<T> loadDataFromFile(Path filePath) {
 		try (var inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
 				var bufferedInputStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
 			CollectionType collectionType = mapper.getTypeFactory().constructCollectionType(List.class, entityClass);
-			return mapper.readValue(bufferedInputStream, collectionType);
+			List<T> list = mapper.readValue(bufferedInputStream, collectionType);
+			return list.stream();
 		} catch (IOException e) {
 			throw new ParseException("Error parsing file %s".formatted(filePath.toAbsolutePath()), e);
 		}
