@@ -11,10 +11,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.streamlined.dataprocessor.entity.Person;
-import com.streamlined.dataprocessor.parser.Parser;
 import com.streamlined.dataprocessor.processor.ProcessingResult;
-import com.streamlined.dataprocessor.processor.Processor;
 
 public class Reporter {
 
@@ -40,14 +37,6 @@ public class Reporter {
 		} catch (IOException e) {
 			throw new ReportingException("Error occurred while saving report", e);
 		}
-	}
-
-	public static void main(String... args) {
-		var parsedData = new Parser<Person>(Person.class).loadData(Path.of("src", "main", "resources"));
-		Processor<Person> processor = new Processor<>(Person.class);
-		var processedData = processor.process(parsedData, "hairColor");
-		Reporter reporter = new Reporter();
-		reporter.save(Path.of("src", "main", "resources", "result.xml"), processedData);
 	}
 
 }
