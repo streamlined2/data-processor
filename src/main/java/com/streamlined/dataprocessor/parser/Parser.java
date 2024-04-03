@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.streamlined.dataprocessor.entity.Entity;
-import com.streamlined.dataprocessor.entity.Person;
 
 public class Parser<T extends Entity<?>> {
 
@@ -49,11 +48,6 @@ public class Parser<T extends Entity<?>> {
 		} catch (IOException e) {
 			throw new ParseException("Error parsing file %s".formatted(filePath.toAbsolutePath()), e);
 		}
-	}
-
-	public static void main(String... args) {
-		var parsedData = new Parser<Person>(Person.class).loadData(Path.of("src", "main", "resources"));
-		parsedData.forEach(System.out::println);
 	}
 
 }
