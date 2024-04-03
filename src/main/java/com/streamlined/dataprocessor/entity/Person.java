@@ -13,8 +13,8 @@ public class Person {
 		GRAY, GREEN, BLUE, BLACK, BROWN, RED, YELLOW
 	}
 
-	private final String name;
-	private final LocalDate birthday;
+	private String name;
+	private LocalDate birthday;
 	private Sex sex;
 	private Color eyeColor;
 	private Color hairColor;
@@ -23,23 +23,26 @@ public class Person {
 	private Country countryOfOrigin;
 	private Country citizenship;
 
-	public Person(String name, LocalDate birthday) {
-		if (Objects.isNull(name) || name.isBlank()) {
-			throw new IllegalArgumentException("Person name should not be blank");
-		}
-		if (Objects.isNull(birthday) || LocalDate.now().isBefore(birthday)) {
-			throw new IllegalArgumentException("Person birthday should be non-null and belong to past");
-		}
-		this.name = name;
-		this.birthday = birthday;
-	}
-
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		if (Objects.isNull(name) || name.isBlank()) {
+			throw new IllegalArgumentException("Person name should not be blank");
+		}
+		this.name = name;
+	}
+
 	public LocalDate getBirthday() {
 		return birthday;
+	}
+
+	public void setBirthDay(LocalDate birthday) {
+		if (Objects.isNull(birthday) || LocalDate.now().isBefore(birthday)) {
+			throw new IllegalArgumentException("Person birthday should be non-null and belong to past");
+		}
+		this.birthday = birthday;
 	}
 
 	public Sex getSex() {
@@ -134,7 +137,7 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person %s (birthday %tF, sex %s, eye color %s, hair color %s, weight %.2f, height %.2f, country of origin %s, citizenship %s)"
+		return "%s (birthday %tF, sex %s, eye color %s, hair color %s, weight %.2f, height %.2f, country of origin [%s], citizenship [%s])"
 				.formatted(name, birthday, sex.toString(), eyeColor.toString(), hairColor.toString(), weight, height,
 						countryOfOrigin.toString(), citizenship.toString());
 	}

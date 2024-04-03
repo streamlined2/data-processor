@@ -8,29 +8,32 @@ public class Country {
 		AFRICA, ASIA, EUROPE, NORTH_AMERICA, SOUTH_AMERICA, ANTARCTICA, AUSTRALIA
 	}
 
-	private final String name;
-	private final Continent continent;
+	private String name;
+	private Continent continent;
 	private String capital;
 	private int population;
 	private double square;
-
-	public Country(String name, Continent continent) {
-		if (Objects.isNull(name) || name.isBlank()) {
-			throw new IllegalArgumentException("Country name should not be blank");
-		}
-		if (Objects.isNull(continent)) {
-			throw new IllegalArgumentException("Country continent should not be null");
-		}
-		this.name = name;
-		this.continent = continent;
-	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		if (Objects.isNull(name) || name.isBlank()) {
+			throw new IllegalArgumentException("Country name should not be blank");
+		}
+		this.name = name;
+	}
+
 	public Continent getContinent() {
 		return continent;
+	}
+
+	public void setContinent(Continent continent) {
+		if (Objects.isNull(continent)) {
+			throw new IllegalArgumentException("Country continent should not be null");
+		}
+		this.continent = continent;
 	}
 
 	public String getCapital() {
@@ -81,7 +84,7 @@ public class Country {
 
 	@Override
 	public String toString() {
-		return "Country %s (%s): capital %s, population %10d, square %15.2f".formatted(name, continent.toString(),
+		return "%s (%s): capital %s, population %d, square %.2f".formatted(name, continent.toString(),
 				capital, population, square);
 	}
 
