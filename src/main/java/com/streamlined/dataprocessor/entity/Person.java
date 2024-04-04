@@ -156,7 +156,7 @@ public class Person implements Entity<String> {
 		return String.join(":", name, Objects.toString(birthday));
 	}
 
-	public Builder builder(String name, LocalDate birthday) {
+	public static Builder builder(String name, LocalDate birthday) {
 		return new Builder(name, birthday);
 	}
 

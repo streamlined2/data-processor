@@ -93,7 +93,7 @@ public class Country implements Entity<String> {
 		return getName();
 	}
 
-	public Builder builder(String name, Continent continent) {
+	public static Builder builder(String name, Continent continent) {
 		return new Builder(name, continent);
 	}
 
