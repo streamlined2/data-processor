@@ -93,4 +93,47 @@ public class Country implements Entity<String> {
 		return getName();
 	}
 
+	public Builder builder(String name, Continent continent) {
+		return new Builder(name, continent);
+	}
+
+	public static class Builder {
+		private final String name;
+		private final Continent continent;
+		private String capital;
+		private int population;
+		private double square;
+
+		private Builder(String name, Continent continent) {
+			this.name = name;
+			this.continent = continent;
+		}
+
+		public Builder capital(String capital) {
+			this.capital = capital;
+			return this;
+		}
+
+		public Builder population(int population) {
+			this.population = population;
+			return this;
+		}
+
+		public Builder square(double square) {
+			this.square = square;
+			return this;
+		}
+
+		public Country build() {
+			Country country = new Country();
+			country.setName(name);
+			country.setContinent(continent);
+			country.setCapital(capital);
+			country.setPopulation(population);
+			country.setSquare(square);
+			return country;
+		}
+
+	}
+
 }

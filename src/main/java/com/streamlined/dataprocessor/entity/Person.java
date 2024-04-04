@@ -156,4 +156,82 @@ public class Person implements Entity<String> {
 		return String.join(":", name, Objects.toString(birthday));
 	}
 
+	public Builder builder(String name, LocalDate birthday) {
+		return new Builder(name, birthday);
+	}
+
+	public static class Builder {
+		private final String name;
+		private final LocalDate birthday;
+		private Sex sex;
+		private Color eyeColor;
+		private Color hairColor;
+		private double weight;
+		private double height;
+		private Country countryOfOrigin;
+		private Country citizenship;
+		private String favoriteMeals;
+
+		private Builder(String name, LocalDate birthday) {
+			this.name = name;
+			this.birthday = birthday;
+		}
+
+		public Builder sex(Sex sex) {
+			this.sex = sex;
+			return this;
+		}
+
+		public Builder eyeColor(Color eyeColor) {
+			this.eyeColor = eyeColor;
+			return this;
+		}
+
+		public Builder hairColor(Color hairColor) {
+			this.hairColor = hairColor;
+			return this;
+		}
+
+		public Builder weight(double weight) {
+			this.weight = weight;
+			return this;
+		}
+
+		public Builder height(double height) {
+			this.height = height;
+			return this;
+		}
+
+		public Builder countryOfOrigin(Country countryOfOrigin) {
+			this.countryOfOrigin = countryOfOrigin;
+			return this;
+		}
+
+		public Builder citizenship(Country citizenship) {
+			this.citizenship = citizenship;
+			return this;
+		}
+
+		public Builder favoriteMeals(String favoriteMeals) {
+			this.favoriteMeals = favoriteMeals;
+			return this;
+		}
+
+		public Person build() {
+			Person person = new Person();
+			person.setName(name);
+			person.setBirthDay(birthday);
+			person.setSex(sex);
+			person.setEyeColor(eyeColor);
+			person.setHairColor(hairColor);
+			person.setWeight(weight);
+			person.setHeight(height);
+			person.setCountryOfOrigin(countryOfOrigin);
+			person.setCitizenship(citizenship);
+			person.setFavoriteMeals(favoriteMeals);
+			return person;
+		}
+
+	}
+
 }
