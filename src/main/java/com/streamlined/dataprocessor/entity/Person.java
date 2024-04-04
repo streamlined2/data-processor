@@ -22,6 +22,7 @@ public class Person implements Entity<String> {
 	private double height;
 	private Country countryOfOrigin;
 	private Country citizenship;
+	private String favoriteMeals;
 
 	public String getName() {
 		return name;
@@ -120,6 +121,14 @@ public class Person implements Entity<String> {
 			throw new IllegalArgumentException("Country of citizenship should not be null");
 		}
 		this.citizenship = citizenship;
+	}
+
+	public String getFavoriteMeals() {
+		return favoriteMeals;
+	}
+
+	public void setFavoriteMeals(String favoriteMeals) {
+		this.favoriteMeals = favoriteMeals;
 	}
 
 	@Override

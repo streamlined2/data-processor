@@ -1,5 +1,6 @@
 package com.streamlined.dataprocessor;
 
+import java.io.File;
 import java.nio.file.Path;
 
 import com.streamlined.dataprocessor.entity.Entity;
@@ -10,7 +11,9 @@ import com.streamlined.dataprocessor.reporter.Reporter;
 
 public class Driver<T extends Entity<?>> {
 
-	private static final Path RESULT_FILE = Path.of("src", "main", "resources", "result.xml");
+	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resources");
+	private static final String FILE_NAME_PREFIX = "statistics_by_";
+	private static final String FILE_TYPE = ".xml";
 
 	private final Parser<T> parser;
 	private final Processor<T> processor;
@@ -25,11 +28,15 @@ public class Driver<T extends Entity<?>> {
 	public void doWork(Path sourceDirectory, String propertyName) {
 		var parsedData = parser.loadData(sourceDirectory);
 		var processedData = processor.process(parsedData, propertyName);
-		reporter.save(RESULT_FILE, processedData);
+		reporter.save(getResultFile(propertyName), processedData);
+	}
+
+	private Path getResultFile(String propertyName) {
+		return new File(RESULT_FILE_DIRECTORY.toFile(), FILE_NAME_PREFIX + propertyName + FILE_TYPE).toPath();
 	}
 
 	public static void main(String... args) {
-		new Driver<Person>(Person.class).doWork(Path.of("src/main/resources"), "hairColor");
+		new Driver<Person>(Person.class).doWork(Path.of("src/main/resources"), "favoriteMeals");
 	}
 
 }

@@ -1,9 +1,9 @@
 package com.streamlined.dataprocessor.processor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public final class ProcessingResult {
 
-	private final List<Item> item;
+	private final SortedSet<Item> item;
 
 	public ProcessingResult(Map<Object, Long> map) {
-		item = new ArrayList<>();
+		item = new TreeSet<>(Item.COMPARATOR_BY_COUNT_DESC);
 		for (var entry : map.entrySet()) {
 			item.add(new Item(entry.getKey(), entry.getValue()));
 		}
@@ -42,9 +42,6 @@ public final class ProcessingResult {
 				gen.writeEndObject();
 			}
 			gen.writeEndObject();
-
 		}
-
 	}
-
 }

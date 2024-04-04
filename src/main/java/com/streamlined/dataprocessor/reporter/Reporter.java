@@ -24,7 +24,7 @@ public class Reporter {
 		mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 		mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 		SimpleModule module = new SimpleModule();
-		module.addSerializer(ProcessingResult.class,new ProcessingResult.Serializer());
+		module.addSerializer(ProcessingResult.class, new ProcessingResult.Serializer());
 		mapper.registerModule(module);
 	}
 

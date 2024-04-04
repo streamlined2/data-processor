@@ -1,12 +1,16 @@
 package com.streamlined.dataprocessor.processor;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.streamlined.dataprocessor.entity.Entity;
 
 public class Processor<T extends Entity<?>> {
+
+	private static final String KEY_SEPARATOR = ",";
 
 	private final Class<T> entityClass;
 
@@ -15,8 +19,8 @@ public class Processor<T extends Entity<?>> {
 	}
 
 	public ProcessingResult process(Stream<T> entityStream, String propertyName) {
-		var map = entityStream
-				.collect(Collectors.groupingBy(entity -> getKeyValue(entity, propertyName), Collectors.counting()));
+		var map = entityStream.map(entity -> getKeyValue(entity, propertyName)).flatMap(this::splitKey)
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 		return new ProcessingResult(map);
 	}
 
@@ -31,6 +35,13 @@ public class Processor<T extends Entity<?>> {
 							.formatted(getterName, entityClass.getSimpleName()),
 					e);
 		}
+	}
+
+	private Stream<Object> splitKey(Object key) {
+		if (key instanceof String string) {
+			return Arrays.stream(string.split(KEY_SEPARATOR));
+		}
+		return Stream.of(key);
 	}
 
 	private String getGetterName(String propertyName) {

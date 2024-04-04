@@ -20,7 +20,8 @@
 			"capital": "Washington",
 			"population": 250000000,
 			"square": 6361952.20
-		}
+		},
+		"favoriteMeals":"potatoes,meat,fish"
 	},
 	{
 		"name": "Jacky Bauer",
@@ -43,7 +44,8 @@
 			"capital": "Washington",
 			"population": 250000000,
 			"square": 6361952.20
-		}
+		},
+		"favoriteMeals":"meat,fish,pasta"
 	},
 	{
 		"name": "Richard Stonewall",
@@ -66,6 +68,7 @@
 			"capital": "Washington",
 			"population": 250000000,
 			"square": 6361952.20
-		}
+		},
+		"favoriteMeals":"fish,pasta,apple"
 	}
 ]
