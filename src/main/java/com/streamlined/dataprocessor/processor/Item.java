@@ -6,7 +6,11 @@ import java.util.Objects;
 public record Item(Object value, Long count) {
 
 	public static final Comparator<Item> COMPARATOR_BY_COUNT_DESC = Comparator.comparing(Item::count).reversed()
-			.thenComparing((a, b) -> a.toString().compareTo(b.toString()));
+			.thenComparing(Item::compareByValue);
+
+	public int compareByValue(Item a) {
+		return value.toString().compareTo(a.value().toString());
+	}
 
 	@Override
 	public boolean equals(Object o) {
