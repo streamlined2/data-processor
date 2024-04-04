@@ -2,6 +2,7 @@ package com.streamlined.dataprocessor.parser;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -19,12 +20,12 @@ public class Parser<T extends Entity<?>> {
 	private static final int BUFFER_SIZE = 16 * 1024;
 
 	private final ObjectMapper mapper;
-	private final Class<T> entityClass;
+	private final CollectionType collectionType;
 
 	public Parser(Class<T> entityClass) {
-		this.entityClass = entityClass;
 		mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
+		collectionType = mapper.getTypeFactory().constructCollectionType(List.class, entityClass);
 	}
 
 	public Stream<T> loadData(Path dataPath) {
@@ -42,12 +43,15 @@ public class Parser<T extends Entity<?>> {
 	private Stream<T> loadDataFromFile(Path filePath) {
 		try (var inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
 				var bufferedInputStream = new BufferedInputStream(inputStream, BUFFER_SIZE)) {
-			CollectionType collectionType = mapper.getTypeFactory().constructCollectionType(List.class, entityClass);
-			List<T> list = mapper.readValue(bufferedInputStream, collectionType);
-			return list.stream();
+			return parseFile(bufferedInputStream);
 		} catch (IOException e) {
 			throw new ParseException("Error parsing file %s".formatted(filePath.toAbsolutePath()), e);
 		}
+	}
+
+	private Stream<T> parseFile(InputStream inputStream) throws IOException {
+		List<T> list = mapper.readValue(inputStream, collectionType);
+		return list.stream();
 	}
 
 }
