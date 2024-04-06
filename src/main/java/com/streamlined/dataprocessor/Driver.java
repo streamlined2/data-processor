@@ -14,13 +14,14 @@ public class Driver<T extends Entity<?>> {
 	private static final Path RESULT_FILE_DIRECTORY = Path.of("src/main/resources/data");
 	private static final String FILE_NAME_PREFIX = "statistics_by_";
 	private static final String FILE_TYPE = ".xml";
+	private static final int NUMBER_OF_THREADS = 8;
 
 	private final Parser<T> parser;
 	private final Processor<T> processor;
 	private final Reporter reporter;
 
-	public Driver(Class<T> entityClass) {
-		parser = new Parser<>(entityClass);
+	public Driver(Class<T> entityClass, int numberOfThreads) {
+		parser = new Parser<>(entityClass, numberOfThreads);
 		processor = new Processor<>(entityClass);
 		reporter = new Reporter();
 	}
@@ -36,7 +37,7 @@ public class Driver<T extends Entity<?>> {
 	}
 
 	public static void main(String... args) {
-		new Driver<Person>(Person.class).doWork(RESULT_FILE_DIRECTORY, "favoriteMeals");
+		new Driver<Person>(Person.class, NUMBER_OF_THREADS).doWork(RESULT_FILE_DIRECTORY, "favoriteMeals");
 	}
 
 }

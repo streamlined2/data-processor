@@ -13,12 +13,13 @@ import com.streamlined.dataprocessor.entity.Person;
 class ParserTest {
 
 	private static final Path TEST_DATA_DIRECTORY = Path.of("src/main/resources");
+	private static final int NUMBER_OF_THREADS = 8;
 
 	private Parser<Person> parser;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		parser = new Parser<>(Person.class);
+		parser = new Parser<>(Person.class, NUMBER_OF_THREADS);
 	}
 
 	@Test

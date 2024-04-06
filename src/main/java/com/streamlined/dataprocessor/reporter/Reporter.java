@@ -1,6 +1,5 @@
 package com.streamlined.dataprocessor.reporter;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,8 +14,7 @@ import com.streamlined.dataprocessor.processor.ProcessingResult;
 
 public class Reporter {
 
-	private static final int BUFFER_SIZE = 16 * 1024;
-
+	private static final String ROOT_ELEMENT = "statistics";
 	private final XmlMapper mapper;
 
 	public Reporter() {
@@ -29,11 +27,9 @@ public class Reporter {
 	}
 
 	public void save(Path resultFile, ProcessingResult processingResult) {
-		try (var stream = Files.newOutputStream(resultFile, StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-				var bufferedStream = new BufferedOutputStream(stream, BUFFER_SIZE)) {
-			var writer = mapper.writer().withRootName("statistics");
-			writer.writeValue(bufferedStream, processingResult);
+		try (var bufferedWriter = Files.newBufferedWriter(resultFile, StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
+			mapper.writer().withRootName(ROOT_ELEMENT).writeValue(bufferedWriter, processingResult);
 		} catch (IOException e) {
 			throw new ReportingException("Error occurred while saving report", e);
 		}
