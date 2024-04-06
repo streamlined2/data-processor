@@ -3,6 +3,8 @@ package com.streamlined.dataprocessor.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Person implements Entity<String> {
 
 	public enum Sex {
@@ -14,6 +16,7 @@ public class Person implements Entity<String> {
 	}
 
 	private String name;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthday;
 	private Sex sex;
 	private Color eyeColor;
