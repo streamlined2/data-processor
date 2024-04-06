@@ -20,7 +20,7 @@ import com.streamlined.dataprocessor.entity.Person;
 
 public class PersonDataGenerator {
 
-	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resource", "data");
+	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resources", "data");
 	private static final String FILE_NAME = "data";
 	private static final String FILE_EXTENSION = ".json";
 	private static final int PERSON_COUNT = 1000;

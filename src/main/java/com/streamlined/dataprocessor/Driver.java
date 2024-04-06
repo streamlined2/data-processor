@@ -11,7 +11,7 @@ import com.streamlined.dataprocessor.reporter.Reporter;
 
 public class Driver<T extends Entity<?>> {
 
-	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resources");
+	private static final Path RESULT_FILE_DIRECTORY = Path.of("src/main/resources/data");
 	private static final String FILE_NAME_PREFIX = "statistics_by_";
 	private static final String FILE_TYPE = ".xml";
 
@@ -36,7 +36,7 @@ public class Driver<T extends Entity<?>> {
 	}
 
 	public static void main(String... args) {
-		new Driver<Person>(Person.class).doWork(Path.of("src/main/resources"), "favoriteMeals");
+		new Driver<Person>(Person.class).doWork(RESULT_FILE_DIRECTORY, "favoriteMeals");
 	}
 
 }
