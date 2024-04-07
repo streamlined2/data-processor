@@ -23,8 +23,8 @@ public class PersonDataGenerator {
 	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resources", "data");
 	private static final String FILE_NAME = "data";
 	private static final String FILE_EXTENSION = ".json";
-	private static final int PERSON_COUNT = 1000;
-	private static final int FILE_COUNT = 10;
+	private static final int PERSON_COUNT = 1_000_000;
+	private static final int FILE_COUNT = 100;
 
 	private static final double MIN_WEIGHT = 50;
 	private static final double MAX_WEIGHT = 150;
