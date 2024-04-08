@@ -1,6 +1,7 @@
 package com.streamlined.dataprocessor.processor;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
@@ -12,10 +13,13 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public final class ProcessingResult implements Iterable<Item> {
 
+	private static final Comparator<Item> COMPARATOR_BY_COUNT_DESC = Comparator.comparing(Item::count).reversed()
+			.thenComparing(Item::compareByValue);
+
 	private final SortedSet<Item> items;
 
 	public ProcessingResult(Map<Object, Long> map) {
-		items = new TreeSet<>(Item.COMPARATOR_BY_COUNT_DESC);
+		items = new TreeSet<>(COMPARATOR_BY_COUNT_DESC);
 		for (var entry : map.entrySet()) {
 			items.add(new Item(entry.getKey(), entry.getValue()));
 		}

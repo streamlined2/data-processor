@@ -1,4 +1,5 @@
 *.json
+*.xml
 /target/
 /bin/
 .classpath

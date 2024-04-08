@@ -11,9 +11,10 @@ import com.streamlined.dataprocessor.reporter.Reporter;
 
 public class Driver<T extends Entity<?>> {
 
-	private static final Path RESULT_FILE_DIRECTORY = Path.of("src/main/resources/data");
-	private static final String FILE_NAME_PREFIX = "statistics_by_";
-	private static final String FILE_TYPE = ".xml";
+	private static final Path DEFAULT_SOURCE_FILE_FOLDER = Path.of("src/main/resources");
+	private static final String DEFAULT_PROPERTY_NAME = "favoriteMeals";
+	private static final String RESULT_FILE_NAME_PREFIX = "statistics_by_";
+	private static final String RESULT_FILE_TYPE = ".xml";
 	private static final int NUMBER_OF_THREADS = 8;
 
 	private final Parser<T> parser;
@@ -26,18 +27,26 @@ public class Driver<T extends Entity<?>> {
 		reporter = new Reporter();
 	}
 
-	public void doWork(Path sourceDirectory, String propertyName) {
-		var parsedData = parser.loadData(sourceDirectory);
+	public void doWork(Path sourceFileFolder, String propertyName) {
+		var parsedData = parser.loadData(sourceFileFolder);
 		var processedData = processor.process(parsedData, propertyName);
-		reporter.save(getResultFile(propertyName), processedData);
+		reporter.save(getResultFile(sourceFileFolder, propertyName), processedData);
 	}
 
-	private Path getResultFile(String propertyName) {
-		return new File(RESULT_FILE_DIRECTORY.toFile(), FILE_NAME_PREFIX + propertyName + FILE_TYPE).toPath();
+	private Path getResultFile(Path sourceFileFolder, String propertyName) {
+		return new File(sourceFileFolder.toFile(), RESULT_FILE_NAME_PREFIX + propertyName + RESULT_FILE_TYPE).toPath();
 	}
 
 	public static void main(String... args) {
-		new Driver<Person>(Person.class, NUMBER_OF_THREADS).doWork(RESULT_FILE_DIRECTORY, "favoriteMeals");
+		String propertyName = DEFAULT_PROPERTY_NAME;
+		if (args.length >= 2) {
+			propertyName = args[1];
+		}
+		Path sourceFileFolder = DEFAULT_SOURCE_FILE_FOLDER;
+		if (args.length >= 1) {
+			sourceFileFolder = Path.of(args[0]);
+		}
+		new Driver<Person>(Person.class, NUMBER_OF_THREADS).doWork(sourceFileFolder, propertyName);
 	}
 
 }

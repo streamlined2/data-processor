@@ -1,12 +1,8 @@
 package com.streamlined.dataprocessor.processor;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 public record Item(Object value, Long count) {
-
-	public static final Comparator<Item> COMPARATOR_BY_COUNT_DESC = Comparator.comparing(Item::count).reversed()
-			.thenComparing(Item::compareByValue);
 
 	public int compareByValue(Item a) {
 		return value.toString().compareTo(a.value().toString());

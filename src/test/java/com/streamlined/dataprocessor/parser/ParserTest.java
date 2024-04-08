@@ -9,6 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.streamlined.dataprocessor.entity.Person;
+import com.streamlined.dataprocessor.entity.Person.Sex;
+import com.streamlined.dataprocessor.entity.Person.Color;
 
 class ParserTest {
 
@@ -22,8 +24,192 @@ class ParserTest {
 	}
 
 	@ParameterizedTest
+	@ValueSource(strings = { "[]" })
+	void documentIsEmpty_loadData_resultShouldBeEmpty(String entityList) {
+		var parsedData = parser.loadData(new String[] { entityList }).toList();
+
+		assertEquals(0, parsedData.size());
+		assertTrue(parsedData.isEmpty());
+	}
+
+	@ParameterizedTest
 	@ValueSource(strings = { """
-				[
+			[
+				{
+					"name": "John Smith",
+					"birthday": "1970-01-01",
+					"sex": "MALE",
+					"eyeColor": "GREEN",
+					"hairColor": "BLACK",
+					"weight": 60.20,
+					"height": 185.00,
+					"countryOfOrigin": {
+						"name": "Great Britain",
+						"continent": "EUROPE",
+						"capital": "London",
+						"population": 60000000,
+						"square": 1745813.01
+					},
+					"citizenship": {
+						"name": "USA",
+						"continent": "NORTH_AMERICA",
+						"capital": "Washington",
+						"population": 250000000,
+						"square": 6361952.20
+					},
+					"favoriteMeals":"potatoes,meat,fish"
+				}
+			]
+						""" })
+	void documentContainsOneEntity_loadData_resultShouldContainOneEntity(String entityList) {
+		var parsedData = parser.loadData(new String[] { entityList }).toList();
+
+		assertEquals(1, parsedData.size());
+		assertEquals("John Smith", parsedData.get(0).getName());
+		assertEquals(LocalDate.of(1970, 1, 1), parsedData.get(0).getBirthday());
+		assertEquals(Sex.MALE, parsedData.get(0).getSex());
+		assertEquals(Color.GREEN, parsedData.get(0).getEyeColor());
+		assertEquals(Color.BLACK, parsedData.get(0).getHairColor());
+		assertEquals("Great Britain", parsedData.get(0).getCountryOfOrigin().getName());
+		assertEquals("USA", parsedData.get(0).getCitizenship().getName());
+		assertEquals("potatoes,meat,fish", parsedData.get(0).getFavoriteMeals());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			[
+				{
+					"name": "John Smith",
+					"birthday": "01-01-9999",
+					"sex": "MALE",
+					"eyeColor": "GREEN",
+					"hairColor": "BLACK",
+					"weight": 60.20,
+					"height": 185.00,
+					"countryOfOrigin": {
+						"name": "Great Britain",
+						"continent": "EUROPE",
+						"capital": "London",
+						"population": 60000000,
+						"square": 1745813.01
+					},
+					"citizenship": {
+						"name": "USA",
+						"continent": "NORTH_AMERICA",
+						"capital": "Washington",
+						"population": 250000000,
+						"square": 6361952.20
+					},
+					"favoriteMeals":"potatoes,meat,fish"
+				}
+			]
+						""" })
+	void documentContainsInvalidBirthday_loadData_shouldThrowException(String entityList) {
+		assertThrows(ParseException.class, () -> parser.loadData(new String[] { entityList }).toList());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			[
+				{
+					"name": "John Smith",
+					"birthday": "1970-01-01",
+					"sex": "UNKNOWN",
+					"eyeColor": "GREEN",
+					"hairColor": "BLACK",
+					"weight": 60.20,
+					"height": 185.00,
+					"countryOfOrigin": {
+						"name": "Great Britain",
+						"continent": "EUROPE",
+						"capital": "London",
+						"population": 60000000,
+						"square": 1745813.01
+					},
+					"citizenship": {
+						"name": "USA",
+						"continent": "NORTH_AMERICA",
+						"capital": "Washington",
+						"population": 250000000,
+						"square": 6361952.20
+					},
+					"favoriteMeals":"potatoes,meat,fish"
+				}
+			]
+						""" })
+	void documentContainsInvalidSex_loadData_shouldThrowException(String entityList) {
+		assertThrows(ParseException.class, () -> parser.loadData(new String[] { entityList }).toList());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			[
+				{
+					"name": "John Smith",
+					"birthday": "1970-01-01",
+					"sex": "MALE",
+					"eyeColor": "MAGENTA",
+					"hairColor": "BLACK",
+					"weight": 60.20,
+					"height": 185.00,
+					"countryOfOrigin": {
+						"name": "Great Britain",
+						"continent": "EUROPE",
+						"capital": "London",
+						"population": 60000000,
+						"square": 1745813.01
+					},
+					"citizenship": {
+						"name": "USA",
+						"continent": "NORTH_AMERICA",
+						"capital": "Washington",
+						"population": 250000000,
+						"square": 6361952.20
+					},
+					"favoriteMeals":"potatoes,meat,fish"
+				}
+			]
+						""" })
+	void documentContainsInvalidEyeColor_loadData_shouldThrowException(String entityList) {
+		assertThrows(ParseException.class, () -> parser.loadData(new String[] { entityList }).toList());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			[
+				{
+					"name": "John Smith",
+					"birthday": "1970-01-01",
+					"sex": "MALE",
+					"eyeColor": "GREEN",
+					"hairColor": "BLACK",
+					"weight": "wrong weight",
+					"height": 185.00,
+					"countryOfOrigin": {
+						"name": "Great Britain",
+						"continent": "EUROPE",
+						"capital": "London",
+						"population": 60000000,
+						"square": 1745813.01
+					},
+					"citizenship": {
+						"name": "USA",
+						"continent": "NORTH_AMERICA",
+						"capital": "Washington",
+						"population": 250000000,
+						"square": 6361952.20
+					},
+					"favoriteMeals":"potatoes,meat,fish"
+				}
+			]
+						""" })
+	void documentContainsInvalidWeight_loadData_shouldThrowException(String entityList) {
+		assertThrows(ParseException.class, () -> parser.loadData(new String[] { entityList }).toList());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { """
+			[
 				{
 					"name": "John Smith",
 					"birthday": "1970-01-01",
@@ -171,7 +357,7 @@ class ParserTest {
 			]
 
 						""" })
-	void testParseFile(String entityList) {
+	void documentContainsSixEntities_loadData_resultShouldContainSixEntities(String entityList) {
 		var parsedData = parser.loadData(new String[] { entityList }).toList();
 
 		assertEquals(6, parsedData.size());
