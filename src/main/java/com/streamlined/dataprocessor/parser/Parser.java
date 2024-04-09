@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.streamlined.dataprocessor.entity.Entity;
 
 public class Parser<T extends Entity<?>> {
+
+	private static final Logger log = Logger.getLogger(Parser.class.getName());
 
 	private static final String SOURCE_FILE_PATTERN = "*.json";
 	private static final int SOURCE_FILE_QUEUE_INITIAL_CAPACITY = 100;
@@ -54,6 +57,7 @@ public class Parser<T extends Entity<?>> {
 			};
 			return executeTasks(taskCallable);
 		} catch (IOException e) {
+			log.severe(() -> "Error iterating through directory %s".formatted(dataPath));
 			throw new ParseException("Error iterating through directory %s".formatted(dataPath), e);
 		}
 	}
@@ -62,6 +66,7 @@ public class Parser<T extends Entity<?>> {
 		try (var reader = Files.newBufferedReader(filePath)) {
 			return mapper.readValue(reader, collectionType);
 		} catch (IOException e) {
+			log.severe(() -> "Error parsing file %s".formatted(filePath.toAbsolutePath()));
 			throw new ParseException("Error parsing file %s".formatted(filePath.toAbsolutePath()), e);
 		}
 	}
@@ -83,6 +88,7 @@ public class Parser<T extends Entity<?>> {
 		try {
 			return mapper.readValue(document, collectionType);
 		} catch (JsonProcessingException e) {
+			log.severe(() -> "Error parsing document %s".formatted(document));
 			throw new ParseException("Error parsing document %s".formatted(document), e);
 		}
 	}
@@ -94,6 +100,7 @@ public class Parser<T extends Entity<?>> {
 			executorService.awaitTermination(PARSE_TASK_TERMINATION_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 			return collectTaskResults(futures);
 		} catch (InterruptedException e) {
+			log.severe("Error while waiting for parsing threads");
 			throw new ParseException("Error while waiting for parsing threads", e);
 		}
 	}
@@ -114,6 +121,7 @@ public class Parser<T extends Entity<?>> {
 			}
 			return stream;
 		} catch (InterruptedException | ExecutionException e) {
+			log.severe("Error while waiting for parsing threads");
 			throw new ParseException("Error while waiting for parsing threads", e);
 		}
 	}

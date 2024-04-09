@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -13,6 +14,8 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.streamlined.dataprocessor.processor.ProcessingResult;
 
 public class Reporter {
+
+	private static final Logger log = Logger.getLogger(Reporter.class.getName());
 
 	private static final String ROOT_ELEMENT = "statistics";
 	private final XmlMapper mapper;
@@ -31,6 +34,7 @@ public class Reporter {
 				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
 			mapper.writer().withRootName(ROOT_ELEMENT).writeValue(bufferedWriter, processingResult);
 		} catch (IOException e) {
+			log.severe("Error occurred while saving report");
 			throw new ReportingException("Error occurred while saving report", e);
 		}
 	}

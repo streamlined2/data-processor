@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.streamlined.dataprocessor.entity.Country;
@@ -19,6 +21,8 @@ import com.streamlined.dataprocessor.entity.Country.Continent;
 import com.streamlined.dataprocessor.entity.Person;
 
 public class PersonDataGenerator {
+
+	private static final Logger log = Logger.getLogger(PersonDataGenerator.class.getName());
 
 	private static final Path RESULT_FILE_DIRECTORY = Path.of("src", "main", "resources", "data");
 	private static final String FILE_NAME = "data";
@@ -84,6 +88,7 @@ public class PersonDataGenerator {
 			}
 			mapper.writeValue(writer, persons);
 		} catch (IOException e) {
+			log.severe("Can't write generated data");
 			throw new GeneratorException("Can't write generated data", e);
 		}
 	}
@@ -92,6 +97,7 @@ public class PersonDataGenerator {
 		try {
 			Files.createDirectories(resultFileDirectory);
 		} catch (IOException e) {
+			log.severe("Can't create directory for data to generate");
 			throw new GeneratorException("Can't create directory for data to generate", e);
 		}
 	}
@@ -150,9 +156,9 @@ public class PersonDataGenerator {
 		}
 		return b.toString();
 	}
-/*
-	public static void main(String... args) {
-		new PersonDataGenerator().createData(RESULT_FILE_DIRECTORY, PERSON_COUNT, FILE_COUNT);
-	}
-*/
+	/*
+	 * public static void main(String... args) { new
+	 * PersonDataGenerator().createData(RESULT_FILE_DIRECTORY, PERSON_COUNT,
+	 * FILE_COUNT); }
+	 */
 }

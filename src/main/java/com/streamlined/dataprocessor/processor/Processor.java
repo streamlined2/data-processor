@@ -3,12 +3,15 @@ package com.streamlined.dataprocessor.processor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.streamlined.dataprocessor.entity.Entity;
 
 public class Processor<T extends Entity<?>> {
+
+	private static final Logger log = Logger.getLogger(Processor.class.getName());
 
 	private static final String KEY_SEPARATOR = ",";
 
@@ -30,6 +33,8 @@ public class Processor<T extends Entity<?>> {
 			Method getter = entityClass.getDeclaredMethod(getterName);
 			return getter.invoke(entity);
 		} catch (ReflectiveOperationException | SecurityException e) {
+			log.severe(() -> "No accessible getter method %s found for entity class %s or it's execution failed"
+					.formatted(getterName, entityClass.getSimpleName()));
 			throw new ProcessingException(
 					"No accessible getter method %s found for entity class %s or it's execution failed"
 							.formatted(getterName, entityClass.getSimpleName()),
