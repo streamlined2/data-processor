@@ -28,12 +28,12 @@ class ProcessorTest {
 
 	@Test
 	void emptyStreamValidPropertyName_process_processingResultShouldBeEmpty() {
-		assertTrue(processor.process(Stream.empty(), VALID_PROPERTY_NAME).isEmpty());
+		assertTrue(processor.processEntityStream(Stream.empty(), VALID_PROPERTY_NAME).isEmpty());
 	}
 
 	@Test
 	void emptyStreamInvalidPropertyName_process_processingResultShouldBeEmpty() {
-		assertTrue(processor.process(Stream.empty(), INVALID_PROPERTY_NAME).isEmpty());
+		assertTrue(processor.processEntityStream(Stream.empty(), INVALID_PROPERTY_NAME).isEmpty());
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class ProcessorTest {
 				.hairColor(Color.YELLOW).weight(70).height(190).countryOfOrigin(usa).citizenship(uk)
 				.favoriteMeals("apple").build();
 
-		ProcessingResult result = processor.process(Stream.of(person), VALID_PROPERTY_NAME);
+		ProcessingResult result = processor.processEntityStream(Stream.of(person), VALID_PROPERTY_NAME);
 
 		assertFalse(result.isEmpty());
 		assertEquals(1, result.size());
@@ -65,7 +65,7 @@ class ProcessorTest {
 				.hairColor(Color.YELLOW).weight(70).height(190).countryOfOrigin(usa).citizenship(uk)
 				.favoriteMeals("apple,pear,grape").build();
 
-		assertThrows(ProcessingException.class, () -> processor.process(Stream.of(person), INVALID_PROPERTY_NAME));
+		assertThrows(ProcessingException.class, () -> processor.processEntityStream(Stream.of(person), INVALID_PROPERTY_NAME));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ class ProcessorTest {
 				.eyeColor(Color.BROWN).hairColor(Color.YELLOW).weight(70).height(190).countryOfOrigin(usa)
 				.citizenship(uk).favoriteMeals("apple").build();
 
-		ProcessingResult result = processor.process(Stream.of(jackSmith, jennyWatson, robertPerry),
+		ProcessingResult result = processor.processEntityStream(Stream.of(jackSmith, jennyWatson, robertPerry),
 				VALID_PROPERTY_NAME);
 
 		assertFalse(result.isEmpty());

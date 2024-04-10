@@ -38,6 +38,20 @@ public final class ProcessingResult implements Iterable<Item> {
 		return items.iterator();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder("[");
+		var i = iterator();
+		if (i.hasNext()) {
+			b.append(i.next());
+			while (i.hasNext()) {
+				b.append(",").append(i.next());
+			}
+		}
+		b.append("]");
+		return b.toString();
+	}
+
 	public static class Serializer extends StdSerializer<ProcessingResult> {
 
 		public Serializer() {

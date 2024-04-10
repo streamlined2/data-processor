@@ -29,7 +29,7 @@ public class Driver<T extends Entity<?>> {
 
 	public void doWork(Path sourceFileFolder, String propertyName) {
 		var parsedData = parser.loadData(sourceFileFolder);
-		var processedData = processor.process(parsedData, propertyName);
+		var processedData = processor.processEntityStream(parsedData, propertyName);
 		reporter.save(getResultFile(sourceFileFolder, propertyName), processedData);
 	}
 
