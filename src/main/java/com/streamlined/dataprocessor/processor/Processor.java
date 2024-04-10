@@ -1,7 +1,6 @@
 package com.streamlined.dataprocessor.processor;
 
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -9,8 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.streamlined.dataprocessor.entity.Entity;
-import com.streamlined.dataprocessor.entity.Person;
-import com.streamlined.dataprocessor.parser.StreamingParser;
 
 public class Processor<T extends Entity<?>> {
 
@@ -61,13 +58,5 @@ public class Processor<T extends Entity<?>> {
 	private String getGetterName(String propertyName) {
 		return "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
 	}
-/*
-	public static void main(String... args) {
-		StreamingParser parser = new StreamingParser(8);
-		var processor = new Processor<>(Person.class);
-		//var result = processor.processKeyStream(parser.stream(Path.of("src/main/resources/data"), "eyeColor"));
-		var result = processor.processKeyStream(parser.stream(Path.of("src/main/resources/data"), "favoriteMeals"));
-		System.out.println(result);
-	}
-*/
+
 }

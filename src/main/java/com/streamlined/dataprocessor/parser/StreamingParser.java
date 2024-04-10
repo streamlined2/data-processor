@@ -144,10 +144,4 @@ public class StreamingParser {
 			}
 		}
 	}
-/*
-	public static void main(String[] args) {
-		StreamingParser parser = new StreamingParser(8);
-		System.out.println(parser.stream(Path.of("src/main/resources/data"), "eyeColor").count());
-	}
-*/
 }
