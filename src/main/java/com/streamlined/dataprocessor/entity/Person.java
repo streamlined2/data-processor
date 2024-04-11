@@ -5,6 +5,9 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Person entity class
+ */
 public class Person implements Entity<String> {
 
 	public enum Sex {

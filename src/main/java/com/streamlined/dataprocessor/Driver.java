@@ -9,6 +9,12 @@ import com.streamlined.dataprocessor.parser.Parser;
 import com.streamlined.dataprocessor.processor.Processor;
 import com.streamlined.dataprocessor.reporter.Reporter;
 
+/**
+ * Main class of the application which coordinates work of parser, processor,
+ * reporter classes
+ * 
+ * @param <T> entity type
+ */
 public class Driver<T extends Entity<?>> {
 
 	private static final Path DEFAULT_SOURCE_FILE_FOLDER = Path.of("src/main/resources");
@@ -27,6 +33,14 @@ public class Driver<T extends Entity<?>> {
 		reporter = new Reporter();
 	}
 
+	/**
+	 * Method parses JSON documents from folder {@code sourceFileFolder}, extracts
+	 * values of property {@code propertyName}, processes them, forms report and
+	 * saves it as XML file
+	 * 
+	 * @param sourceFileFolder folder that contains source JSON documents
+	 * @param propertyName     name of entity property
+	 */
 	public void doWork(Path sourceFileFolder, String propertyName) {
 		var parsedData = parser.loadData(sourceFileFolder);
 		var processedData = processor.processEntityStream(parsedData, propertyName);
@@ -37,6 +51,14 @@ public class Driver<T extends Entity<?>> {
 		return new File(sourceFileFolder.toFile(), RESULT_FILE_NAME_PREFIX + propertyName + RESULT_FILE_TYPE).toPath();
 	}
 
+	/**
+	 * Starting point of the application. Constructs parser, processor, reporter
+	 * instances, and calls method {@code doWork}
+	 * 
+	 * @param args first parameter is folder that contains source JSON files to
+	 *             parse, second parameter is name of the entity property which
+	 *             should be processed
+	 */
 	public static void main(String... args) {
 		String propertyName = DEFAULT_PROPERTY_NAME;
 		if (args.length >= 2) {

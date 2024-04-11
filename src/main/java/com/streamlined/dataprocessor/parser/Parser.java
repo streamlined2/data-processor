@@ -23,6 +23,12 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.streamlined.dataprocessor.entity.Entity;
 
+/**
+ * Class parses JSON documents and extracts entities or their property values
+ * into stream
+ * 
+ * @param <T> type of entity class
+ */
 public class Parser<T extends Entity<?>> {
 
 	private static final Logger log = Logger.getLogger(Parser.class.getName());
@@ -44,6 +50,13 @@ public class Parser<T extends Entity<?>> {
 		collectionType = mapper.getTypeFactory().constructCollectionType(List.class, entityClass);
 	}
 
+	/**
+	 * Method parses JSON documents from folder {@code dataPath} and returns stream
+	 * of parsed entities
+	 * 
+	 * @param dataPath source files folder
+	 * @return stream of entities
+	 */
 	public Stream<T> loadData(Path dataPath) {
 		try (var pathStream = Files.newDirectoryStream(dataPath, SOURCE_FILE_PATTERN)) {
 			final BlockingQueue<Path> sourceFileQueue = new ArrayBlockingQueue<>(SOURCE_FILE_QUEUE_INITIAL_CAPACITY);
@@ -71,6 +84,13 @@ public class Parser<T extends Entity<?>> {
 		}
 	}
 
+	/**
+	 * Method parses JSON documents passed as string parameters {@code entityLists}
+	 * and returns stream of parsed entities
+	 * 
+	 * @param entityLists string documents containing lists of entities
+	 * @return stream of entities
+	 */
 	public Stream<T> loadData(String[] entityLists) {
 		final BlockingQueue<String> sourceDocumentQueue = new ArrayBlockingQueue<>(entityLists.length);
 		sourceDocumentQueue.addAll(Arrays.asList(entityLists));

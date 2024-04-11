@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 import com.streamlined.dataprocessor.entity.Entity;
 
+/**
+ * Class to process stream of entities or property values
+ */
 public class Processor<T extends Entity<?>> {
 
 	private static final Logger log = Logger.getLogger(Processor.class.getName());
@@ -21,6 +24,16 @@ public class Processor<T extends Entity<?>> {
 		this.entityClass = entityClass;
 	}
 
+	/**
+	 * Method processes entity stream {@code entityStream}, extracts value of
+	 * specified entity property {@code propertyName}, splits it if this is
+	 * comma-separated string, and counts number of occurrences for each value
+	 * 
+	 * @param entityStream stream of entities
+	 * @param propertyName name of entity property which value should be extracted
+	 * @return instance of {@code ProcessingResult} that holds map of extracted
+	 *         values and number of occurrences
+	 */
 	public ProcessingResult processEntityStream(Stream<T> entityStream, String propertyName) {
 		var map = entityStream.map(entity -> getKeyValue(entity, propertyName)).flatMap(this::splitKey)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -42,6 +55,14 @@ public class Processor<T extends Entity<?>> {
 		}
 	}
 
+	/**
+	 * Method processes property value stream {@code keyStream}, splits property
+	 * value if this is comma-separated string, and counts number of occurrences for each value
+	 * 
+	 * @param keyStream stream of property values
+	 * @return instance of {@code ProcessingResult} that holds map of extracted
+	 *         values and number of occurrences
+	 */
 	public ProcessingResult processKeyStream(Stream<String> keyStream) {
 		var map = keyStream.flatMap(this::splitKey)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));

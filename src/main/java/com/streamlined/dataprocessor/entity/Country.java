@@ -2,6 +2,9 @@ package com.streamlined.dataprocessor.entity;
 
 import java.util.Objects;
 
+/**
+ * Country entity class
+ */
 public class Country implements Entity<String> {
 
 	public enum Continent {

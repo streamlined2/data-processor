@@ -11,6 +11,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+/**
+ * Class holds set of property values with number of their occurrences
+ */
 public final class ProcessingResult implements Iterable<Item> {
 
 	private static final Comparator<Item> COMPARATOR_BY_COUNT_DESC = Comparator.comparing(Item::count).reversed()
@@ -52,6 +55,9 @@ public final class ProcessingResult implements Iterable<Item> {
 		return b.toString();
 	}
 
+	/**
+	 * Serializer class for custom Jackson serialization to XML file 
+	 */
 	public static class Serializer extends StdSerializer<ProcessingResult> {
 
 		public Serializer() {

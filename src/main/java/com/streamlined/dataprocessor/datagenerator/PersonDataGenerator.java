@@ -20,6 +20,12 @@ import com.streamlined.dataprocessor.entity.Country;
 import com.streamlined.dataprocessor.entity.Country.Continent;
 import com.streamlined.dataprocessor.entity.Person;
 
+/**
+ * Class to generate list of persons and save it as set of JSON files according to specified parameters via method {@code main}
+ * @param RESULT_FILE_DIRECTORY folder to save resulting JSON files
+ * @param PERSON_COUNT total number of persons to generate
+ * @param FILE_COUNT number of files
+ */
 public class PersonDataGenerator {
 
 	private static final Logger log = Logger.getLogger(PersonDataGenerator.class.getName());
@@ -156,9 +162,13 @@ public class PersonDataGenerator {
 		}
 		return b.toString();
 	}
-	/*
-	 * public static void main(String... args) { new
-	 * PersonDataGenerator().createData(RESULT_FILE_DIRECTORY, PERSON_COUNT,
-	 * FILE_COUNT); }
+	
+	/**
+	 * Method {@code main} generates list of persons and saves as set of JSON files
 	 */
+/*	
+	public static void main(String... args) {
+		new PersonDataGenerator().createData(RESULT_FILE_DIRECTORY, PERSON_COUNT, FILE_COUNT);
+	}
+*/
 }

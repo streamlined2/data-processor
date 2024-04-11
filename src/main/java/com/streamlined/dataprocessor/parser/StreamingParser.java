@@ -18,6 +18,10 @@ import java.util.stream.StreamSupport;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonToken;
 
+/**
+ * Class for parsing JSON document consisting of entity list using Jackson
+ * Streaming API
+ */
 public class StreamingParser {
 
 	private static final Logger log = Logger.getLogger(StreamingParser.class.getName());
@@ -42,15 +46,37 @@ public class StreamingParser {
 		jsonFactory = new JsonFactory();
 	}
 
+	/**
+	 * Method creates stream of {@code propertyName} values from parsed JSON
+	 * document located at {@code path}
+	 * 
+	 * @param path         location of JSON document to be parsed
+	 * @param propertyName property name of entities from parsed JSON document which
+	 *                     values will be included in stream
+	 * @return stream of entity property values from parsed JSON document
+	 */
 	public Stream<String> stream(Path path, String propertyName) {
 		StreamingIterable iterable = new StreamingIterable(path, propertyName);
 		return StreamSupport.stream(iterable.spliterator(), false).filter(Objects::nonNull);
 	}
 
+	/**
+	 * Method returns {@code true} if parsing has been completed and no more values
+	 * will be added to result queue {@code resultQueue}
+	 * 
+	 * @return {@code true} if parsing has been completed
+	 */
 	public boolean isDone() {
 		return finishedThreadCount.intValue() == numberOfThreads && resultQueue.isEmpty();
 	}
 
+	/**
+	 * Method fills in source file queue {@code sourceFileQueue}, starts
+	 * {@code numberOfThreads} threads via {@code executorService} and shuts it down
+	 * 
+	 * @param dataPath     folder that contains JSON files to parse
+	 * @param propertyName name of entity property which value should be extracted
+	 */
 	public void startParsing(Path dataPath, String propertyName) {
 		sourceFileQueue.clear();
 		resultQueue.clear();

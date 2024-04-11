@@ -2,6 +2,9 @@ package com.streamlined.dataprocessor.processor;
 
 import java.util.Objects;
 
+/**
+ * Holds property value and number of its occurrences
+ */
 public record Item(Object value, Long count) {
 
 	public int compareByValue(Item a) {
