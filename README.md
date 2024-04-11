@@ -1,22 +1,48 @@
 <h1>Запуск програми</h1>
-Метод <i><b>main</b></i> класу <i><b>com.streamlined.dataprocessor.Driver</b></i> отримує як параметри теку вихідних файлів і назву властивості основної сутності Person, для якої формуються статистичні дані.<p>
+Метод <i><b>main</b></i> класу <i><b>com.streamlined.dataprocessor.Driver</b></i> отримує як параметри теку файлів даних і назву властивості основної сутності <i><b>Person</b></i>, для якої формуються статистичні дані. Наприклад, можливі значення назви властивості <i><b>eyeColor</b></i>, <i><b>hairColor</b></i>, <i><b>favoriteMeals</b></i> (містить перелік улюблених страв, розділених комами). <p>
 
 <h1>Опис сутностей</h1>
 <p>
 Основна сутність <b><i>com.streamlined.dataprocessor.entity.Person</i></b> Фізична особа
-        <p>Атрибути:<i> ім'я, день народження, стать, колір очей та волосся, вага, зріст, країна походження та громадянства, перелік улюблених страв (строки, розділені комами)</i></p>
+        <p>Атрибути<p>
+		<i> 
+        <ul>
+        <li>ім'я <b>name</b></li>
+		<li>день народження <b>birthday</b></li>
+		<li>стать <b>sex</b></li>
+		<li>колір очей <b>eyeColor</b></li>
+		<li>колір волосся <b>hairColor</b></li>
+		<li>вага <b>weight</b></li>
+		<li>зріст <b>height</b></li>
+		<li>країна походження <b>countryOfOrigin</b></li>
+		<li>країна громадянства <b>citizenship</b></li>
+		<li>перелік улюблених страв <b>favoriteMeals</b> (строки, розділені комами)</li>
+        </ul>
+        </i>
+        </p>
 Додаткова сутність <b><i>com.streamlined.dataprocessor.entity.Country</i></b> Країна походження або країна громадянства особи
-        <p>Атрибути:<i> назва, континент розташування, столиця, населення, площа</i></p>
-    
+        <p>Атрибути<p>
+		<i> 
+        <ul>
+        <li>назва <b>name</b></li>
+		<li>континент розташування <b>continent</b></li>
+		<li>столиця <b>capital</b></li>
+		<li>населення <b>population</b></li>
+		<li>площа <b>square</b></li>
+        </ul>
+        </i>
+        </p>    
 </p>
 
 <h1>Зразки файлів даних та результату</h1>
-наведені за посиланням https://github.com/streamlined2/data-processor/tree/main/src/main/resources/data
+наведені за посиланнями
+<p><i>https://github.com/streamlined2/data-processor/tree/main/src/main/resources</i>
+<p><i>https://github.com/streamlined2/data-processor/tree/main/src/main/resources/data</i>
 <p>
 <h1>Вимірювання часу парсингу для різної кількості потоків</h1>
-<h2>виконане за допомогою тесту <i>com.streamlined.dataprocessor.parser.MultithreadParsePerformanceTest</i></h2>
 <p>
-Тестовий набір був попередньо згенерований за допомогою класу <b><i>com.streamlined.dataprocessor.datagenerator.PersonDataGenerator</b></i> із параметрами PERSON_COUNT (кількість сутностей) 1_000_000, та FILE_COUNT (кількість файлів) 100
+Тестовий набір був попередньо створений за допомогою класу <b><i>com.streamlined.dataprocessor.datagenerator.PersonDataGenerator</b></i> із параметрами <i> <b>PERSON_COUNT</b></i>  (загальна кількість сутностей) 1_000_000, та <i><b>FILE_COUNT</b></i>  (кількість файлів) 100.<p>
+Вимірювання виконане за допомогою тесту <b><i>com.streamlined.dataprocessor.parser.MultithreadParsePerformanceTest.measureParseTime</i></b>
 <p>
 <ol>
 <li>  Number of threads 1, parsing duration 10566 msec</li>
@@ -25,11 +51,11 @@
 <li>  Number of threads 4, parsing duration 3231 msec</li>
 <li>  Number of threads 8, parsing duration 2840 msec</li>
 </ol>
-Тривалість парсингу для одного потоку виміряно двічі, бо другий і наступні результати менші через буферизацію на рівні операційної системи, тож перший результат завищений і має бути відкинутий.<p>
-Збільшення кількості потоків вдвічі призводить до прискорення парсингу, але швидкість зростає повільніше, ніж вдвічі, через обмежені можливості інших складових системи і додатковий витрачений час для координації потоків.
+Тривалість парсингу для одного потоку виміряно двічі, бо другий і наступні результати менші через буферизацію на рівні операційної системи, тож перший результат завищений і може бути відкинутий.<p>
+Збільшення кількості потоків вдвічі призводить до прискорення парсингу, але швидкість зростає повільніше, ніж вдвічі, через обмеження інших складових системи і втрати часу на координацію потоків.
 </p>
 
-Час часткового парсингу такого ж набору даних за допомогою Jackson Streaming API (клас <b><i>com.streamlined.dataprocessor.parser.StreamingParser</b></i> в тесті <b><i>com.streamlined.dataprocessor.parser.MultithreadParsePerformanceTest.measureStreamingParseTime</b></i>) значно менший, що свідчить про перевагу даного методу. Крім того, він потребує менше пам'яті.
+Час парсингу значень однієї властивості сутності для такого ж набору даних за допомогою Jackson Streaming API (тест <b><i>com.streamlined.dataprocessor.parser.MultithreadParsePerformanceTest.measureStreamingParseTime</b></i>) значно менший, що свідчить про перевагу даного методу. Крім того, він потребує лише фіксований обсяг пам'яті буферу для збереження даних перед опрацюванням, без виділення пам'яті для створення повної колекції сутностей.
 <p>
 <ol>
 <li>  Number of threads 1, parsing duration 4671 msec via Streaming API</li>
