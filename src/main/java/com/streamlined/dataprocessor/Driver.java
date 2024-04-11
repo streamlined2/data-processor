@@ -5,7 +5,7 @@ import java.nio.file.Path;
 
 import com.streamlined.dataprocessor.entity.Entity;
 import com.streamlined.dataprocessor.entity.Person;
-import com.streamlined.dataprocessor.parser.Parser;
+import com.streamlined.dataprocessor.parser.StreamingParser;
 import com.streamlined.dataprocessor.processor.Processor;
 import com.streamlined.dataprocessor.reporter.Reporter;
 
@@ -23,12 +23,12 @@ public class Driver<T extends Entity<?>> {
 	private static final String RESULT_FILE_TYPE = ".xml";
 	private static final int NUMBER_OF_THREADS = 8;
 
-	private final Parser<T> parser;
+	private final StreamingParser parser;
 	private final Processor<T> processor;
 	private final Reporter reporter;
 
 	public Driver(Class<T> entityClass, int numberOfThreads) {
-		parser = new Parser<>(entityClass, numberOfThreads);
+		parser = new StreamingParser(numberOfThreads);
 		processor = new Processor<>(entityClass);
 		reporter = new Reporter();
 	}
@@ -42,8 +42,8 @@ public class Driver<T extends Entity<?>> {
 	 * @param propertyName     name of entity property
 	 */
 	public void doWork(Path sourceFileFolder, String propertyName) {
-		var parsedData = parser.loadData(sourceFileFolder);
-		var processedData = processor.processEntityStream(parsedData, propertyName);
+		var propertyStream = parser.stream(sourceFileFolder, propertyName);
+		var processedData = processor.processPropertyStream(propertyStream);
 		reporter.save(getResultFile(sourceFileFolder, propertyName), processedData);
 	}
 

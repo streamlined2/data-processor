@@ -35,7 +35,7 @@ public class Processor<T extends Entity<?>> {
 	 *         values and number of occurrences
 	 */
 	public ProcessingResult processEntityStream(Stream<T> entityStream, String propertyName) {
-		var map = entityStream.map(entity -> getKeyValue(entity, propertyName)).flatMap(this::splitKey)
+		var map = entityStream.map(entity -> getKeyValue(entity, propertyName)).flatMap(this::splitProperty)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 		return new ProcessingResult(map);
 	}
@@ -56,24 +56,25 @@ public class Processor<T extends Entity<?>> {
 	}
 
 	/**
-	 * Method processes property value stream {@code keyStream}, splits property
-	 * value if this is comma-separated string, and counts number of occurrences for each value
+	 * Method processes property value stream {@code propertyStream}, splits
+	 * property value if this is comma-separated string, and counts number of
+	 * occurrences for each value
 	 * 
-	 * @param keyStream stream of property values
+	 * @param propertyStream stream of property values
 	 * @return instance of {@code ProcessingResult} that holds map of extracted
 	 *         values and number of occurrences
 	 */
-	public ProcessingResult processKeyStream(Stream<String> keyStream) {
-		var map = keyStream.flatMap(this::splitKey)
+	public ProcessingResult processPropertyStream(Stream<String> propertyStream) {
+		var map = propertyStream.flatMap(this::splitProperty)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 		return new ProcessingResult(map);
 	}
 
-	private Stream<Object> splitKey(Object key) {
-		if (key instanceof String string) {
+	private Stream<Object> splitProperty(Object property) {
+		if (property instanceof String string) {
 			return Arrays.stream(string.split(KEY_SEPARATOR));
 		}
-		return Stream.of(key);
+		return Stream.of(property);
 	}
 
 	private String getGetterName(String propertyName) {
